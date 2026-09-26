@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Administração · Protocolos</title>
+<link rel="stylesheet" href="dashboard.css">
+<style>
+  body.pb{ grid-template-columns: 48px 1fr; grid-template-areas: "cab cab" "rail acoes" "rail tela"; }
+  @media (max-width: 860px){ body.pb{ grid-template-columns: 0 1fr; grid-template-areas: "cab cab" "acoes acoes" "tela tela"; } }
+</style>
+</head>
+<body class="pb carregando-dados">
+
+  <div class="pb-acoes">
+    <button type="button" class="pb-acao" id="bt-novo-usuario">${I.mais1}<span class="txt">Novo usuário</span></button>
+    <button type="button" class="pb-acao" id="bt-novo-registro">${I.mais1}<span class="txt">Incluir registro</span></button>
+    <span class="pb-sep"></span>
+    <button type="button" class="pb-acao" id="bt-importar" title="Envia para o banco os registros antigos que ficaram salvos neste navegador">${I.importar}<span class="txt">Importar registros antigos</span></button>
+    <button type="button" class="pb-acao" id="bt-exportar">${I.exportar}<span class="txt">Exportar</span></button>
+    <div class="direita"><span id="resumo">carregando…</span></div>
+  </div>
+
+  <main class="pb-tela">
+    <div class="pb-rolagem">
+
+      <section class="pb-pagina" data-pagina="usuarios">
+        <div class="pb-titulo-pag"><div><h1>Usuários</h1><p>Login, senha, perfil e acesso de cada pessoa. Desativar bloqueia o login na hora.</p></div></div>
+        <div class="adm-barra">
+          <div class="pb-busca">${I.lupa}<input class="pb-input" id="busca-u" placeholder="Buscar nome ou e-mail"></div>
+          <div class="dir">
+            <button type="button" class="pb-btn" id="mostrar-senhas">Mostrar senhas</button>
+            <button type="button" class="pb-btn prim" id="bt-novo-usuario-2">+ Novo usuário</button>
+          </div>
+        </div>
+        <article class="vis span-12" style="min-height:300px">
+          <h2>Usuários cadastrados <small id="qtd-u"></small></h2>
+          <div class="pb-tabela-wrap"><table class="pb-tabela adm-tabela" id="t-usuarios"></table></div>
+        </article>
+      </section>
+
+      <section class="pb-pagina" data-pagina="registros" hidden>
+        <div class="pb-titulo-pag"><div><h1>Tudo que foi digitado</h1><p>Registros de todos os usuários. Edite ou exclua quando precisar corrigir.</p></div></div>
+        <div class="adm-barra">
+          <div class="pb-busca">${I.lupa}<input class="pb-input" id="busca-r" placeholder="Protocolo, caixa ou nome"></div>
+          <select class="pb-select" id="filtro-r-nome" style="width:200px"><option value="">Todas as pessoas</option></select>
+          <input type="date" class="pb-input" id="filtro-r-data" style="width:160px" title="Filtrar por data">
+          <div class="dir"><button type="button" class="pb-btn prim" id="bt-novo-registro-2">+ Incluir registro</button></div>
+        </div>
+        <article class="vis span-12" style="height:calc(100vh - 290px); min-height:360px">
+          <h2>Registros <small id="qtd-r"></small></h2>
+          <div class="pb-tabela-wrap"><table class="pb-tabela adm-tabela" id="t-registros"></table></div>
+          <div class="pb-rodape-tabela">
+            <button type="button" class="pb-acao" id="r-ant">‹ Anterior</button>
+            <span id="r-info"></span>
+            <button type="button" class="pb-acao" id="r-prox">Próxima ›</button>
+          </div>
+        </article>
+      </section>
+    </div>
+
+    <nav class="pb-abas" id="abas">
+      <button type="button" class="ativo" data-ir="usuarios">Usuários</button>
+      <button type="button" data-ir="registros">Registros</button>
+    </nav>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="sessao.js"></script>
+  <script src="clima.js"></script>
+  <script src="pb-shell.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

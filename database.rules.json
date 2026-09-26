@@ -1,0 +1,47 @@
+{
+  "rules": {
+    "protocolos": {
+      "usuarios": {
+        ".read": "auth != null && root.child('protocolos/usuarios/' + auth.uid + '/perfil').val() === 'admin'",
+        "$uid": {
+          ".read": "auth != null && auth.uid === $uid",
+          ".write": "auth != null && (root.child('protocolos/usuarios/' + auth.uid + '/perfil').val() === 'admin' || (auth.uid === $uid && newData.exists()))",
+          ".validate": "newData.hasChildren(['nome', 'email', 'perfil', 'ativo'])",
+          "nome": {
+            ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 80"
+          },
+          "email": {
+            ".validate": "newData.isString()"
+          },
+          "perfil": {
+            ".validate": "(newData.val() === 'usuario' && (!data.exists() || data.val() === 'usuario' || root.child('protocolos/usuarios/' + auth.uid + '/perfil').val() === 'admin')) || (newData.val() === 'admin' && (root.child('protocolos/usuarios/' + auth.uid + '/perfil').val() === 'admin' || auth.token.email === 'wandersonpereira18@gmail.com'))"
+          },
+          "ativo": {
+            ".validate": "newData.isBoolean() && (root.child('protocolos/usuarios/' + auth.uid + '/perfil').val() === 'admin' || (!data.exists() && newData.val() === true) || data.val() === newData.val())"
+          },
+          "numero": {
+            ".validate": "newData.isString() && newData.val().matches(/^[0-9]{1,15}$/)"
+          }
+        }
+      },
+      "registros": {
+        ".read": "auth != null && (root.child('protocolos/usuarios/' + auth.uid + '/perfil').val() === 'admin' || (query.orderByChild === 'uid' && query.equalTo === auth.uid))",
+        ".indexOn": [
+          "uid",
+          "dataISO"
+        ],
+        "$id": {
+          ".write": "auth != null && (root.child('protocolos/usuarios/' + auth.uid + '/perfil').val() === 'admin' || (!data.exists() && newData.exists() && newData.child('uid').val() === auth.uid && root.child('protocolos/usuarios/' + auth.uid + '/ativo').val() === true))",
+          ".validate": "newData.hasChildren(['protocolo', 'caixa', 'uid', 'dataISO', 'hora', 'digitadoPor'])"
+        }
+      },
+      "logins": {
+        "$chave": {
+          ".read": true,
+          ".write": "auth != null && (root.child('protocolos/usuarios/' + auth.uid + '/perfil').val() === 'admin' || (!data.exists() && newData.val() === auth.token.email) || (data.val() === auth.token.email && !newData.exists()))",
+          ".validate": "newData.isString() && newData.val().contains('@')"
+        }
+      }
+    }
+  }
+}

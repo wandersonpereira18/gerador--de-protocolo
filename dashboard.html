@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard de Protocolos</title>
+<link rel="stylesheet" href="dashboard.css">
+</head>
+<body class="pb carregando-dados">
+
+  <!-- barra de ações -->
+  <div class="pb-acoes">
+    <button type="button" class="pb-acao" id="bt-exportar">${I.exportar}<span class="txt">Exportar dados</span></button>
+    <button type="button" class="pb-acao" id="bt-redefinir">${I.borracha}<span class="txt">Redefinir filtros</span></button>
+    <button type="button" class="pb-acao" id="bt-atualizar">${I.atualizar}<span class="txt">Atualizar visuais</span></button>
+    <span class="pb-sep"></span>
+    <button type="button" class="pb-acao" id="bt-filtros">${I.funil}<span class="txt">Filtros</span></button>
+    <div class="direita"><span id="atualizado">carregando dados…</span></div>
+  </div>
+
+  <main class="pb-tela">
+    <div class="pb-rolagem" id="rolagem">
+
+      <!-- PÁGINA 1: VISÃO GERAL -->
+      <section class="pb-pagina" data-pagina="geral">
+        <div class="pb-titulo-pag">
+          <div>
+            <h1>Visão geral dos protocolos</h1>
+            <p id="escopo">—</p>
+          </div>
+        </div>
+
+        <article class="vis slicer span-4" id="s-nome" style="height:96px">
+          <h2>Nome</h2>
+          <select class="pb-select" id="f-nome-rapido" aria-label="Filtrar por nome"><option value="">Todos</option></select>
+          <button type="button" class="limpar-slicer" data-limpa="nome" title="Limpar seleção">${I.borracha}</button>
+        </article>
+        <article class="vis slicer span-8" id="s-periodo" style="height:96px">
+          <h2>Período</h2>
+          <div class="chips" style="margin-top:0" id="chips-periodo">
+            <button type="button" class="chip" data-p="hoje">Hoje</button>
+            <button type="button" class="chip" data-p="ontem">Ontem</button>
+            <button type="button" class="chip" data-p="7d">Últimos 7 dias</button>
+            <button type="button" class="chip" data-p="30d">Últimos 30 dias</button>
+            <button type="button" class="chip" data-p="mes">Este mês</button>
+            <button type="button" class="chip on" data-p="tudo">Tudo</button>
+          </div>
+          <button type="button" class="limpar-slicer" data-limpa="periodo" title="Limpar seleção">${I.borracha}</button>
+        </article>
+
+        <article class="vis card span-3 alt-card" id="k-total"><div class="card-valor">0</div><div class="card-rotulo">Registros</div><div class="card-sub" id="k-total-sub">&nbsp;</div></article>
+        <article class="vis card span-3 alt-card" id="k-prot"><div class="card-valor">0</div><div class="card-rotulo">Protocolos únicos</div><div class="card-sub">&nbsp;</div></article>
+        <article class="vis card span-3 alt-card" id="k-caixa"><div class="card-valor">0</div><div class="card-rotulo">Caixas distintas</div><div class="card-sub">&nbsp;</div></article>
+        <article class="vis card span-3 alt-card" id="k-dup"><div class="card-valor">0</div><div class="card-rotulo">Protocolos repetidos</div><div class="card-sub" id="k-dup-sub">&nbsp;</div></article>
+
+        <article class="vis span-5 alt-g" data-vis="nome"><h2>Quantidade digitada por nome</h2><canvas></canvas></article>
+        <article class="vis span-7 alt-g" data-vis="dia"><h2>Registros por dia <small id="nota-dia"></small></h2><canvas></canvas></article>
+        <article class="vis span-5 alt-m" data-vis="hora"><h2>Registros por hora do dia</h2><canvas></canvas></article>
+        <article class="vis span-4 alt-m" data-vis="rosca"><h2>Participação por pessoa</h2><canvas></canvas></article>
+        <article class="vis span-3 alt-m" data-vis="caixa"><h2>Caixas com mais registros <small>top 8</small></h2><canvas></canvas></article>
+      </section>
+
+      <!-- PÁGINA 2: POR PESSOA -->
+      <section class="pb-pagina" data-pagina="pessoas" hidden>
+        <div class="pb-titulo-pag">
+          <div><h1>Produtividade por pessoa</h1><p>Clique numa linha para filtrar o relatório inteiro por essa pessoa.</p></div>
+        </div>
+        <article class="vis span-12" style="min-height:220px" id="v-matriz">
+          <h2>Resumo por nome</h2>
+          <div class="pb-tabela-wrap"><table class="pb-tabela" id="matriz"></table></div>
+        </article>
+        <article class="vis span-12 alt-g" data-vis="empilhado"><h2>Registros por dia e por pessoa <small id="nota-emp"></small></h2><canvas></canvas></article>
+      </section>
+
+      <!-- PÁGINA 3: DETALHES -->
+      <section class="pb-pagina" data-pagina="detalhes" hidden>
+        <div class="pb-titulo-pag">
+          <div><h1>Registros detalhados</h1><p>Clique no título de uma coluna para ordenar.</p></div>
+          <div class="pb-busca" style="width:280px">${I.lupa}<input class="pb-input" id="busca-det" placeholder="Buscar protocolo, caixa ou nome"></div>
+        </div>
+        <article class="vis span-12" style="height:calc(100vh - 250px); min-height:360px">
+          <h2>Registros filtrados <small id="det-qtd"></small></h2>
+          <div class="pb-tabela-wrap"><table class="pb-tabela" id="det"></table></div>
+          <div class="pb-rodape-tabela">
+            <button type="button" class="pb-acao" id="pg-ant">‹ Anterior</button>
+            <span id="pg-info"></span>
+            <button type="button" class="pb-acao" id="pg-prox">Próxima ›</button>
+          </div>
+        </article>
+      </section>
+    </div>
+
+    <nav class="pb-abas" id="abas" aria-label="Páginas do relatório">
+      <button type="button" class="ativo" data-ir="geral">Visão geral</button>
+      <button type="button" data-ir="pessoas">Por pessoa</button>
+      <button type="button" data-ir="detalhes">Detalhes</button>
+      <span class="info" id="info-filtro"></span>
+    </nav>
+  </main>
+
+  <!-- painel de filtros -->
+  <aside class="pb-filtros" id="painel-filtros" aria-label="Filtros">
+    <div class="pb-filtros-cab">
+      <strong>Filtros</strong>
+      <button type="button" id="fechar-filtros" title="Recolher/expandir">${I.dupla}</button>
+    </div>
+    <div class="pb-filtros-corpo">
+      <div class="secao">Filtros nesta página e em todas as páginas</div>
+
+      <div class="fcard aberto" id="fc-nome">
+        <button type="button" class="fcard-cab"><b>Nome</b><span id="fc-nome-resumo">é (Tudo)</span>${I.seta}</button>
+        <div class="fcard-corpo"><div><div class="dentro">
+          <div class="pb-busca">${I.lupa}<input class="pb-input" id="busca-nome" placeholder="Pesquisar"></div>
+          <div class="slicer-lista" id="lista-nomes"></div>
+        </div></div></div>
+      </div>
+
+      <div class="fcard aberto" id="fc-data">
+        <button type="button" class="fcard-cab"><b>Data</b><span id="fc-data-resumo">(Tudo)</span>${I.seta}</button>
+        <div class="fcard-corpo"><div><div class="dentro">
+          <label for="f-d1">De</label><input type="date" class="pb-input" id="f-d1">
+          <label for="f-d2">Até</label><input type="date" class="pb-input" id="f-d2">
+        </div></div></div>
+      </div>
+
+      <div class="fcard" id="fc-hora">
+        <button type="button" class="fcard-cab"><b>Hora</b><span id="fc-hora-resumo">(Tudo)</span>${I.seta}</button>
+        <div class="fcard-corpo"><div><div class="dentro">
+          <label for="f-h1">Das</label><input type="time" class="pb-input" id="f-h1">
+          <label for="f-h2">Até</label><input type="time" class="pb-input" id="f-h2">
+        </div></div></div>
+      </div>
+    </div>
+  </aside>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="sessao.js"></script>
+  <script src="clima.js"></script>
+  <script src="pb-shell.js"></script>
+  <script src="graficos.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>

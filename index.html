@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registro de Protocolos · Entrar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <canvas id="sky-canvas" aria-hidden="true"></canvas>
+
+  <header class="topo">
+    <div class="topo-dir">
+      <div class="wx" id="clima" title="Clima em Taguatinga"></div>
+    </div>
+  </header>
+
+  <main class="board camada">
+    <section class="clipboard auth-card vidro" id="auth-card" aria-live="polite">
+      <div class="clipboard-clip" aria-hidden="true"></div>
+
+      <div class="abas" id="abas" data-aba="login" role="tablist">
+        <span class="marcador" aria-hidden="true"></span>
+        <button type="button" role="tab" aria-selected="true" data-ir="login">Entrar</button>
+        <button type="button" role="tab" aria-selected="false" data-ir="cadastro">Criar conta</button>
+      </div>
+
+      <div class="telas" id="telas">
+
+        <!-- ENTRAR -->
+        <div class="tela" id="tela-login">
+          <h1>Que bom te ver</h1>
+          <p class="subtitle">Entre com seu e-mail, seu nome ou seu número — e a senha que você cadastrou.</p>
+          <form class="form-auth" id="form-login" novalidate>
+            <div class="field">
+              <label for="login-email">E-mail, nome ou número</label>
+              <input type="text" id="login-email" autocomplete="username" autocapitalize="off" spellcheck="false" placeholder="ex.: voce@email.com, Maria Souza ou 1234" required>
+            </div>
+            <div class="field">
+              <label for="login-senha">Senha</label>
+              <div class="campo-senha">
+                <input type="password" id="login-senha" autocomplete="current-password" placeholder="••••••" required>
+                <button type="button" class="olho" data-alvo="login-senha" aria-label="Mostrar senha"></button>
+              </div>
+              <span class="capslock" data-caps="login-senha">Caps Lock está ligado</span>
+            </div>
+            <div class="linha-auth">
+              <label class="check"><input type="checkbox" id="lembrar" checked> Lembrar meu e-mail</label>
+              <button type="button" class="link" data-ir="esqueci">Esqueci a senha</button>
+            </div>
+            <div class="aviso" id="login-aviso" role="alert"></div>
+            <button type="submit" class="btn btn-print btn-full">
+              <span class="rotulo">Entrar</span>
+              <span class="carregando" aria-hidden="true"><i></i><i></i><i></i></span>
+            </button>
+          </form>
+        </div>
+
+        <!-- CRIAR CONTA -->
+        <div class="tela" id="tela-cadastro" hidden>
+          <h1>Criar conta</h1>
+          <p class="subtitle">Seu nome vai aparecer como “Digitado por” em tudo que você registrar. Nome, número e e-mail não podem se repetir.</p>
+          <form class="form-auth" id="form-cadastro" novalidate>
+            <div class="field">
+              <label for="cad-nome">Nome completo</label>
+              <input type="text" id="cad-nome" autocomplete="name" placeholder="Como você quer aparecer" maxlength="80" required>
+            </div>
+            <div class="field">
+              <label for="cad-numero">Número (matrícula ou código pessoal)</label>
+              <input type="text" id="cad-numero" inputmode="numeric" pattern="[0-9]*" maxlength="15" autocomplete="off" placeholder="só números — você pode entrar com ele" required>
+            </div>
+            <div class="field">
+              <label for="cad-email">E-mail</label>
+              <input type="email" id="cad-email" autocomplete="email" inputmode="email" placeholder="voce@email.com" required>
+            </div>
+            <div class="field">
+              <label for="cad-senha">Senha</label>
+              <div class="campo-senha">
+                <input type="password" id="cad-senha" autocomplete="new-password" placeholder="mínimo 6 caracteres" required>
+                <button type="button" class="olho" data-alvo="cad-senha" aria-label="Mostrar senha"></button>
+              </div>
+              <div class="forca" id="forca" data-n="0"><i></i><i></i><i></i><i></i></div>
+              <span class="forca-txt" id="forca-txt"></span>
+            </div>
+            <div class="field">
+              <label for="cad-senha2">Confirmar senha</label>
+              <div class="campo-senha">
+                <input type="password" id="cad-senha2" autocomplete="new-password" placeholder="repita a senha" required>
+                <button type="button" class="olho" data-alvo="cad-senha2" aria-label="Mostrar senha"></button>
+              </div>
+            </div>
+            <div class="aviso" id="cad-aviso" role="alert"></div>
+            <button type="submit" class="btn btn-print btn-full">
+              <span class="rotulo">Criar minha conta</span>
+              <span class="carregando" aria-hidden="true"><i></i><i></i><i></i></span>
+            </button>
+          </form>
+        </div>
+
+        <!-- ESQUECI A SENHA -->
+        <div class="tela" id="tela-esqueci" hidden>
+          <button type="button" class="link voltar" data-ir="login">← voltar para entrar</button>
+          <h1>Esqueceu a senha?</h1>
+          <p class="subtitle">Digite seu e-mail, nome ou número. Vamos mandar para o e-mail cadastrado uma mensagem com o seu login e um link para você criar a senha de novo.</p>
+          <form class="form-auth" id="form-esqueci" novalidate>
+            <div class="field">
+              <label for="esq-email">E-mail, nome ou número cadastrado</label>
+              <input type="text" id="esq-email" autocomplete="username" autocapitalize="off" placeholder="voce@email.com" required>
+            </div>
+            <div class="aviso" id="esq-aviso" role="alert"></div>
+            <button type="submit" class="btn btn-print btn-full">
+              <span class="rotulo">Enviar e-mail</span>
+              <span class="carregando" aria-hidden="true"><i></i><i></i><i></i></span>
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Boas-vindas depois do login -->
+  <div class="bv" id="bv" role="dialog" aria-modal="true" aria-labelledby="bv-oi">
+    <div class="bv-card">
+      <div class="bv-icone" id="bv-icone"></div>
+      <h1 class="bv-oi" id="bv-oi"></h1>
+      <p class="bv-frase" id="bv-frase"></p>
+      <div class="bv-meta" id="bv-meta"></div>
+      <div class="bv-acoes">
+        <button type="button" class="btn btn-print" id="bv-ir"><span class="rotulo">Começar a registrar →</span></button>
+        <div class="bv-barra"><i></i></div>
+        <small>ou aperte Enter</small>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="sessao.js"></script>
+  <script src="clima.js"></script>
+  <script src="cena-base.js"></script>
+  <script src="cena-fauna.js"></script>
+  <script src="cena-loop.js"></script>
+  <script src="saudacao.js"></script>
+  <script src="auth.js"></script>
+</body>
+</html>

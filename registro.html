@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registro de Protocolos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Paisagem animada: céu e clima reais de Taguatinga, cerrado e bichos -->
+  <canvas id="sky-canvas" aria-hidden="true"></canvas>
+
+  <header class="topo">
+    <div class="topo-dir">
+      <div class="wx" id="clima" title="Clima em Taguatinga"></div>
+      <div class="usuario" id="usuario">
+        <button type="button" class="usuario-btn" id="usuario-btn" aria-haspopup="true" aria-expanded="false">
+          <span class="avatar" id="u-avatar">··</span>
+          <span class="nome" id="u-nome">carregando…</span>
+          <span class="seta">▾</span>
+        </button>
+        <div class="usuario-menu" role="menu">
+          <div class="quem"><strong id="m-nome">—</strong><span id="m-email">—</span></div>
+          <a href="dashboard.html" role="menuitem">📊 Dashboard</a>
+          <a href="admin.html" role="menuitem" id="m-admin" hidden>🛠️ Administração</a>
+          <button type="button" class="sair" id="sair" role="menuitem">↩ Sair</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="board camada">
+    <section class="clipboard vidro" id="prancheta" aria-labelledby="board-title">
+      <div class="clipboard-clip" aria-hidden="true"></div>
+
+      <h1 id="board-title">Registro de protocolos</h1>
+      <p class="subtitle">Preencha protocolo e número da caixa e imprima.</p>
+
+      <form id="entry-form" class="entry-form" novalidate>
+
+        <div class="field field-who">
+          <label>Digitado por</label>
+          <div class="cracha">
+            <span class="avatar" id="c-avatar">··</span>
+            <span class="cracha-txt"><small>Registrando como</small><strong id="c-nome">—</strong></span>
+            <span class="online" id="conexao"><i></i><span>conectado</span></span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="protocolo">Nº Protocolo</label>
+          <input type="text" id="protocolo" name="protocolo" inputmode="numeric" pattern="[0-9]*" autocomplete="off" class="so-numero" placeholder="Ex.: 145255635" required>
+          <span class="field-error" id="protocolo-error" role="alert"></span>
+        </div>
+        <div class="field">
+          <label for="caixa">Nº Caixa</label>
+          <input type="text" id="caixa" name="caixa" inputmode="numeric" pattern="[0-9]*" autocomplete="off" class="so-numero" placeholder="Ex.: 2353532353" required>
+          <span class="field-error" id="caixa-error" role="alert"></span>
+        </div>
+        <button type="submit" class="btn btn-print" id="print-btn">
+          <span class="rotulo">Imprimir</span>
+          <span class="carregando" aria-hidden="true"><i></i><i></i><i></i></span>
+        </button>
+      </form>
+
+      <div class="list-header">
+        <h2>Meus registros de hoje</h2>
+        <span class="count-badge" id="count-badge">0 impressos</span>
+      </div>
+
+      <div class="search-box">
+        <input type="text" id="search-input" inputmode="numeric" pattern="[0-9]*" autocomplete="off" class="so-numero" placeholder="Consultar Nº protocolo.">
+        <button type="button" class="btn btn-secondary" id="search-btn">Buscar</button>
+      </div>
+      <div class="search-result" id="search-result" role="status"></div>
+
+      <ul class="entry-list" id="entry-list">
+        <li class="empty-state" id="empty-state">Nenhum protocolo impresso ainda hoje.</li>
+      </ul>
+
+    </section>
+  </main>
+
+  <footer class="site-footer camada">
+    <span class="vidro">Digitado por: <strong id="footer-name">—</strong></span>
+  </footer>
+
+  <!-- Área usada exclusivamente para impressão -->
+  <div id="print-page" class="print-page" aria-hidden="true">
+    <div class="print-row print-meta">
+      <div id="print-hora">Hora: --:--</div>
+      <div id="print-data">Data: --/--/----</div>
+    </div>
+    <hr class="print-divider">
+    <div class="print-row print-block">
+      <div class="print-label">Protocolo:</div>
+      <div class="print-value" id="print-protocolo-value">0</div>
+    </div>
+    <hr class="print-divider">
+    <div class="print-row print-block">
+      <div class="print-label">Nº Caixa</div>
+      <div class="print-value" id="print-caixa-value">0</div>
+    </div>
+    <hr class="print-divider">
+    <div class="print-row print-footer" id="print-footer">Digitado por</div>
+  </div>
+
+  <!-- Bicho-guia -->
+  <div class="field-helper" id="field-helper" aria-hidden="true">
+    <span class="helper-emoji" id="helper-emoji" aria-hidden="true"></span>
+    <div class="helper-bubble" id="helper-bubble"></div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="sessao.js"></script>
+  <script src="clima.js"></script>
+  <script src="cena-base.js"></script>
+  <script src="cena-fauna.js"></script>
+  <script src="cena-loop.js"></script>
+  <script src="registro.js"></script>
+</body>
+</html>
