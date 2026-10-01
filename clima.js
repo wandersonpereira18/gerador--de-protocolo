@@ -8,7 +8,7 @@
      ?hora=6   (simula a hora do dia, 0–23)
    --------------------------------------------------------- */
 const Clima = (() => {
-  const LAT = -15.8335, LON = -48.0559; // Taguatinga-DF
+  const LAT = -15.813336321344117, LON = -48.0885131; // Taguatinga-DF
   const API =
     `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}` +
     "&current=temperature_2m,apparent_temperature,relative_humidity_2m,is_day,precipitation,rain,showers," +
