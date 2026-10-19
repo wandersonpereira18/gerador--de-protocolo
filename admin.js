@@ -1,8 +1,3 @@
-/* ---------------------------------------------------------
-   ADMINISTRAÇÃO — usuários (login/senha/perfil) e registros
-   Contas são criadas/alteradas/excluídas por um app Firebase
-   paralelo, para o admin não perder a própria sessão.
-   --------------------------------------------------------- */
 (async () => {
   const $ = (id) => document.getElementById(id);
   PB.icones();
