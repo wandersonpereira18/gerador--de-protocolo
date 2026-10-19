@@ -1,6 +1,3 @@
-/* ---------------------------------------------------------
-   BOAS-VINDAS — cumprimento pelo horário + frase pelo clima real
-   --------------------------------------------------------- */
 const Saudacao = (() => {
   // {nome} é trocado pelo primeiro nome de quem entrou
   const FRASES = {
